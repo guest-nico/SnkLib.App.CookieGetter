@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A0609B9B-4867-4001-878C-E6CFFA30B7B6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SunokoLibrary.Application</RootNamespace>
+    <AssemblyName>SnkLib.App.CookieGetter</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <AssemblyOriginatorKeyFile>SnkLib.App.CookieGetter.snk</AssemblyOriginatorKeyFile>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>PdbOnly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SnkLib.App.CookieGetter.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\..\packages\BouncyCastle.Crypto.dll.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\CookieGetters.cs">
+      <Link>CookieGetters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\SnkLib.App.CookieGetter\CookieSourceInfo.cs">
+      <Link>CookieSourceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\net4.5\SnkLib.App.CookieGetter\CookieSourceSelector.cs">
+      <Link>CookieSourceSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\BlinkImporterFactory.cs">
+      <Link>Factories\BlinkImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ChromeImporterFactory.cs">
+      <Link>Factories\ChromeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ChromiumImporterFactory.cs">
+      <Link>Factories\ChromiumImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ComplexImporterFactory.cs">
+      <Link>Factories\ComplexImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\EdgeImporterFactory.cs">
+      <Link>Factories\EdgeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\FirefoxImporterFactory.cs">
+      <Link>Factories\FirefoxImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\GeckoImporterFactory.cs">
+      <Link>Factories\GeckoImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\IEImporterFactory.cs">
+      <Link>Factories\IEImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\ImporterFactoryBase.cs">
+      <Link>Factories\ImporterFactoryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\LunascapeImporterFactory.cs">
+      <Link>Factories\LunascapeImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\MaxthonImporterFactory.cs">
+      <Link>Factories\MaxthonImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\OperaWebkitImporterFactory.cs">
+      <Link>Factories\OperaWebkitImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\SleipnirImporterFactory.cs">
+      <Link>Factories\SleipnirImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\SmartImporterFactory.cs">
+      <Link>Factories\SmartImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\TungstenImporterFactory.cs">
+      <Link>Factories\TungstenImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Factories\WebkitQtImporterFactory.cs">
+      <Link>Factories\WebkitQtImporterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\BlinkCookieImporter.cs">
+      <Link>Getters\BlinkCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\CookieImporterBase.cs">
+      <Link>Getters\CookieImporterBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\GeckoCookieImporter.cs">
+      <Link>Getters\GeckoCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\IECookieImporter.cs">
+      <Link>Getters\IECookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\IEFindCacheCookieImporter.cs">
+      <Link>Getters\IEFindCacheCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\IEPMCookieImporter.cs">
+      <Link>Getters\IEPMCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\SqlCookieImporter.cs">
+      <Link>Getters\SqlCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Importers\WebkitQtCookieImporter.cs">
+      <Link>Getters\WebkitQtCookieImporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Interfaces.cs">
+      <Link>Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\IProxyService.cs">
+      <Link>IProxyService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Net4.5\SnkLib.App.CookieGetter\Utility.cs">
+      <Link>Utility.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Substitutes\System.Threading.SemaphoreSlim.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\Net4.5\SnkLib.App.CookieGetter\Build\ImportFileBuildAction.targets" />
+  <Import Project="..\..\Net4.5\SnkLib.App.CookieGetter\Build\Deploy.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューターにはない NuGet パッケージを参照しています。これらをダウンロードするには、NuGet パッケージの復元を有効にしてください。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。不足しているファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>SnkLib.App.CookieGetter.Forms</id>
+        <version>1.4.0.0</version>
+        <title>SnkLib.App.CookieGetter.Forms</title>
+        <authors>namoshika</authors>
+        <owners>namoshika</owners>
+        <summary>This library provides extensions for Windows Forms to "SnkLib.App.CookieGetter".</summary>
+        <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
+        <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SnkLib.App.CookieGetterを使用し、ブラウザのCookieを取り込む際に使えるUI部品を提供します。</description>
+        <copyright>Copyright 2014 namoshika</copyright>
+        <tags>Browser Cookie Getter</tags>
+        <references>
+            <reference file="SnkLib.App.CookieGetter.Forms.dll"/>
+        </references>
+        <dependencies>
+            <group targetFramework="net45">
+                <dependency id="SnkLib.App.CookieGetter" version="2.2.1.0" />
+            </group>
+            <group targetFramework="net40">
+                <dependency id="SnkLib.App.CookieGetter" version="2.1.0.0" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+                <dependency id="Microsoft.Net.Http" version="2.2.29" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <!--.net4.5-->
+        <file src="..\Net4.5\SnkLib.App.CookieGetter.Forms\bin\Release\SnkLib.App.CookieGetter.Forms.dll" target="lib\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter.Forms\bin\Release\SnkLib.App.CookieGetter.Forms.xml" target="lib\net45" />
+        <!--.net4.0-->
+        <file src="..\Net4.0\SnkLib.App.CookieGetter.Forms\bin\Release\SnkLib.App.CookieGetter.Forms.dll" target="lib\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter.Forms\bin\Release\SnkLib.App.CookieGetter.Forms.xml" target="lib\net40" />
+    </files>
+</package>

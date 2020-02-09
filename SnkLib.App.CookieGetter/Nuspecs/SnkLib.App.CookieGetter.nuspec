@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>SnkLib.App.CookieGetter</id>
+        <version>2.3.1.0</version>
+        <title>SnkLib.App.CookieGetter</title>
+        <authors>namoshika</authors>
+        <owners>namoshika</owners>
+        <summary>This is a library to use browser Cookies by your desktop apps.</summary>
+        <description>IEやChrome、Firefox、それらの派生ブラウザからCookieを取得し、.NETデスクトップアプリで扱うためのライブラリです。</description>
+        <projectUrl>https://github.com/namoshika/SnkLib.App.CookieGetter</projectUrl>
+        <licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <copyright>Copyright 2015 namoshika</copyright>
+        <tags>Browser Cookie Getter</tags>
+        <references>
+            <reference file="SnkLib.App.CookieGetter.dll" />
+        </references>
+        <dependencies>
+            <group targetFramework="net45">
+                <dependency id="Newtonsoft.Json" version="9.0.1" />
+                <dependency id="System.Data.SQLite.Core" version="1.0.104.0" />
+            </group>
+            <group targetFramework="net40">
+                <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+                <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
+                <dependency id="Newtonsoft.Json" version="9.0.1" />
+                <dependency id="System.Data.SQLite.Core" version="1.0.104.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <!--.net4.5-->
+        <file src="..\Net4.5\LibChecker\bin\Release\SnkLib.App.CookieGetter.LibChecker.exe" target="build\net45" />
+        <file src="..\Net4.5\LibChecker\Build\SnkLib.App.CookieGetter.targets" target="build\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.dll" target="lib\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net45" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\bin\Release\x86\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net45\x86" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\Build\Deploy.targets" target="build\net45" />
+        <!--.net4.0-->
+        <file src="..\Net4.0\LibChecker\bin\Release\SnkLib.App.CookieGetter.LibChecker.exe" target="build\net40" />
+        <file src="..\Net4.5\LibChecker\Build\SnkLib.App.CookieGetter.targets" target="build\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.dll" target="lib\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\SnkLib.App.CookieGetter.xml" target="lib\net40" />
+        <file src="..\Net4.0\SnkLib.App.CookieGetter\bin\Release\x86\SnkLib.App.CookieGetter.x86Proxy.exe" target="build\net40\x86" />
+        <file src="..\Net4.5\SnkLib.App.CookieGetter\Build\Deploy.targets" target="build\net40" />
+    </files>
+</package>
