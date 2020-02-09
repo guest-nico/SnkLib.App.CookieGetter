@@ -2,6 +2,7 @@ GoogleChrome80の仕様変更に対応するため、SnkLib.App.CookieGetter様�
 ビルド・実行にはBouncyCastle.Cryptoが必要になります。
   
   
+
 #SnkLib.App.CookieGetter
 
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
