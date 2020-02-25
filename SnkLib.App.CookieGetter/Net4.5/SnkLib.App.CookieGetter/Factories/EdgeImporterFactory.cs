@@ -27,6 +27,9 @@ namespace SunokoLibrary.Application.Browsers
                 cookieFolder += @"\AC\#!001\MicrosoftEdge\Cookies";
                 _importer = new IEFindCacheCookieImporter(
                     new CookieSourceInfo("MicrosoftEdge", "Default", cookieFolder, EngineIds[0], false), 0);
+                
+                //new BlinkImporterFactory("Chromium", "%LOCALAPPDATA%\\Chromium\\User Data\\")
+                
             }
             return new[] { _importer };
         }

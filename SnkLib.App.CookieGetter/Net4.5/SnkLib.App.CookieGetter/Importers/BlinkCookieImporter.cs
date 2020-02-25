@@ -139,8 +139,16 @@ namespace SunokoLibrary.Application.Browsers
         }
         private byte[] getOsKey() {
         	try {
-				var path = "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Local State";
-        		path = path.Replace("%LOCALAPPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+        		var p = this.SourceInfo.CookiePath;
+        		Debug.WriteLine("cookie path " + p + " name " + this.SourceInfo.BrowserName);
+        		string path = null;
+        		path = p.Substring(0, p.IndexOf("Default\\Cookies")) + "Local State";
+        		Debug.WriteLine("local state path" + path);
+        		//if (SourceInfo.BrowserName == "GoogleChrome") path = "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Local State";
+        		//else if (SourceInfo.BrowserName == "Edge") path = "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Local State";
+        		//if (p.ToLower().Replace("/", "\\").IndexOf("google\\chrome")
+				//var path = "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Local State";
+        		//path = path.Replace("%LOCALAPPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
 				using (var f = new System.IO.StreamReader(path)) {
 	        		var t = f.ReadToEnd();
 	        		

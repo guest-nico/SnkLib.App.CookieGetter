@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -136,6 +136,7 @@ namespace SunokoLibrary.Application
         /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
         public static int GetCookiesFromProtectedModeIE(out string cookiesText, Uri targetUrl, string valueKey = null, uint paramsFlag = INTERNET_COOKIE_HTTPONLY)
         {
+        	Debug.WriteLine("GetCookiesFromProtectedModeIE");
             var cookieSize = 4096;
             var lpszCookieData = new StringBuilder(cookieSize);
             var dwSizeP = new IntPtr(cookieSize);
@@ -157,6 +158,7 @@ namespace SunokoLibrary.Application
                         + e.ToString());
                     return int.MaxValue;
                 }
+                Debug.WriteLine("hResult " + hResult);
                 switch ((uint)hResult)
                 {
                     case 0x8007007A://バッファー不足
@@ -170,15 +172,23 @@ namespace SunokoLibrary.Application
                         lpszCookieData.Capacity = cookieSize;
                         continue;
                     case 0x00000000://S_OK
+                        cookiesText = lpszCookieData.ToString();
+                        Debug.WriteLine("S_OK protected " + cookiesText);
+                        return hResult;
                     case 0x80070103://データ無し
+                        cookiesText = lpszCookieData.ToString();
+                        return hResult;
                     case 0x80070057://E_INVALIDARG: IEが非保護モードだと出てきたりする
                         cookiesText = lpszCookieData.ToString();
+                        Debug.WriteLine("E_INVALIDARG " + hResult);
                         return hResult;
                     default:
                         cookiesText = null;
                         Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
-                            + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。");
-                        return hResult;
+                                         + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。" + (uint)hResult + " " + i);
+                        if (i > 20) 
+                        	return hResult;
+                        continue;
                 }
             }
         }
@@ -232,14 +242,19 @@ namespace SunokoLibrary.Application
                         lpszCookieData.Capacity = cookieSize;
                         continue;
                     case 0x00000000: //S_OK
+                        cookiesText = lpszCookieData.ToString();
+                        Debug.WriteLine("S_OK protected " + cookiesText);
+                        return hResult;
                     case 0x80070103: //データ無し
                         cookiesText = lpszCookieData.ToString();
                         return hResult;
                     default:
                         cookiesText = null;
                         Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
-                            + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。");
-                        return hResult;
+                            + "GetCookiesFromIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。");
+                        if (i > 20) 
+                        	return hResult;
+                        continue;
                 }
             }
         }
