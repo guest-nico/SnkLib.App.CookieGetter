@@ -87,25 +87,22 @@ namespace SunokoLibrary.Application.Browsers
                     baseObj.Value = string.Empty;
                 else
                 {
-                	var isAead = Encoding.ASCII.GetString(new byte[]{cipher[0], cipher[1], cipher[2]}) == "v10";
-                	Debug.WriteLine("isAead " + isAead + " " + cipher[0] + " " + cipher[1]);
-                	if (isAead) {
-                		try {
-                			var plain = decryptAeadProtectedData(cipher);
-                			if (plain == null)
-		                        throw new CookieImportException(
-		                            "Cookieの暗号化データを復号化できませんでした。aead", CookieImportState.ConvertError);
-		                    baseObj.Value = plain;
-                		} catch (Exception e) {
-                			Debug.WriteLine(e.Message + e.Source + e.StackTrace + e.TargetSite);
-                		}
-                	} else {
-	                    var plain = Win32Api.DecryptProtectedData(cipher);
-	                    if (plain == null)
-	                        throw new CookieImportException(
-	                            "Cookieの暗号化データを復号化できませんでした。", CookieImportState.ConvertError);
-	                    baseObj.Value = Encoding.UTF8.GetString(plain);
-                	}
+                    if (formatVersion >= 12)
+                    {
+                        var plain = decryptAeadProtectedData(cipher);
+                        if (plain == null)
+                            throw new CookieImportException(
+                                "Cookieの暗号化データを復号化できませんでした。aead", CookieImportState.ConvertError);
+                        baseObj.Value = plain;
+                    }
+                    else
+                    {
+                        var plain = Win32Api.DecryptProtectedData(cipher);
+                        if (plain == null)
+                            throw new CookieImportException(
+                                "Cookieの暗号化データを復号化できませんでした。", CookieImportState.ConvertError);
+                        baseObj.Value = Encoding.UTF8.GetString(plain);
+                    }
                 }
             }
             else
@@ -128,52 +125,54 @@ namespace SunokoLibrary.Application.Browsers
                 " OR ", domains.Select(domain => string.Format("host_key = \"{0}\"", domain)).ToArray()));
             return query;
         }
-        private string decryptAeadProtectedData(byte[] payload) {
-        	var nonce = new List<byte>(payload).GetRange(3, 96 / 8);
-			var cipher = new List<byte>(payload).GetRange(3 + 96 / 8, payload.Length - (3 + 96 / 8));
-			var oskey = getOsKey();
-			Debug.WriteLine("nonce " + nonce + " cipher " + cipher + " " + oskey);
-			
-			var dec = decodeAead(cipher.ToArray(), nonce.ToArray(), oskey);
-			return dec;
-        }
-        private byte[] getOsKey() {
-        	try {
-        		var p = this.SourceInfo.CookiePath;
-        		Debug.WriteLine("cookie path " + p + " name " + this.SourceInfo.BrowserName);
-        		string path = null;
-        		path = p.Substring(0, p.IndexOf("Default\\Cookies")) + "Local State";
-        		Debug.WriteLine("local state path" + path);
-        		//if (SourceInfo.BrowserName == "GoogleChrome") path = "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Local State";
-        		//else if (SourceInfo.BrowserName == "Edge") path = "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Local State";
-        		//if (p.ToLower().Replace("/", "\\").IndexOf("google\\chrome")
-				//var path = "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Local State";
-        		//path = path.Replace("%LOCALAPPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-				using (var f = new System.IO.StreamReader(path)) {
-	        		var t = f.ReadToEnd();
-	        		
-	        		var m = new System.Text.RegularExpressions.Regex("\"encrypted_key\":\"(.+?)\"").Match(t);
-	        		if (m.Groups.Count < 2) return null;
-	        		
-	        		var b = Convert.FromBase64String(m.Groups[1].ToString());
-					b = new List<byte>(b).GetRange(5, b.Length - 5).ToArray();
-					var plain = Win32Api.DecryptProtectedData(b);
-					return plain;
-				}
-        	} catch (Exception e) {
-        		Debug.WriteLine(e.Message + e.Source + e.StackTrace + e.TargetSite);
-        		return null;
-        	}
-		}
-        private string decodeAead(byte[] chunk, byte[] nonce, byte[] oskey) {
-			var iv = generateNonce(nonce, 0);
-			var dec = DecryptWithKey(chunk, oskey, iv);
-			return Encoding.ASCII.GetString(dec);
-			
-        }
-        public byte[] DecryptWithKey(byte[] encryptedMessage, byte[] key, byte[] nonce)
+
+        private string decryptAeadProtectedData(byte[] payload)
         {
-	        int _macSize = 128;
+            var nonce = new List<byte>(payload).GetRange(3, 96 / 8);
+            var cipher = new List<byte>(payload).GetRange(3 + 96 / 8, payload.Length - (3 + 96 / 8));
+            var oskey = getOsKey();
+            //Debug.WriteLine("nonce " + nonce + " cipher " + cipher + " " + oskey);
+
+            var dec = decodeAead(cipher.ToArray(), nonce.ToArray(), oskey);
+            return dec;
+        }
+        private byte[] getOsKey()
+        {
+            try
+            {
+                var _dataFolder = SourceInfo.CookiePath.Substring(0, SourceInfo.CookiePath.IndexOf("User Data")+9);
+                if (string.IsNullOrEmpty(_dataFolder))
+                    return null;
+                var path = Path.Combine(_dataFolder, "Local State");
+                using (var f = new StreamReader(path))
+                {
+                    var t = f.ReadToEnd();
+
+                    var m = new System.Text.RegularExpressions.Regex("\"encrypted_key\":\"(.+?)\"").Match(t);
+                    if (m.Groups.Count < 2) return null;
+
+                    var b = Convert.FromBase64String(m.Groups[1].ToString());
+                    b = new List<byte>(b).GetRange(5, b.Length - 5).ToArray();
+                    var plain = Win32Api.DecryptProtectedData(b);
+                    return plain;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message + e.Source + e.StackTrace + e.TargetSite);
+                return null;
+            }
+        }
+        private string decodeAead(byte[] chunk, byte[] nonce, byte[] oskey)
+        {
+            var iv = generateNonce(nonce, 0);
+            var dec = DecryptWithKey(chunk, oskey, iv);
+            return Encoding.ASCII.GetString(dec);
+
+        }
+        private byte[] DecryptWithKey(byte[] encryptedMessage, byte[] key, byte[] nonce)
+        {
+            int _macSize = 128;
 
             if (encryptedMessage == null || encryptedMessage.Length == 0)
             {
@@ -183,9 +182,9 @@ namespace SunokoLibrary.Application.Browsers
             using (var cipherStream = new MemoryStream(encryptedMessage))
             using (var cipherReader = new BinaryReader(cipherStream))
             {
-                
-				var cipher = new GcmBlockCipher(new AesEngine());
-				var parameters = new AeadParameters(new KeyParameter(key), _macSize, nonce);
+
+                var cipher = new GcmBlockCipher(new AesEngine());
+                var parameters = new AeadParameters(new KeyParameter(key), _macSize, nonce);
                 cipher.Init(false, parameters);
 
                 //Decrypt Cipher Text
@@ -200,30 +199,33 @@ namespace SunokoLibrary.Application.Browsers
                 //return null;
             }
         }
-        private byte[] generateNonce(byte[] _base, int index) {
-			if (index >= System.Math.Pow(2, 48)) {
-				Debug.WriteLine("Nonce index is too large  BAD_CRYPTO");
-				return null;
-			}
-			var nonce = new byte[12];
-			Array.Copy(_base, 0, nonce, 0, 12);
-			
-			
-			for (var i = 0; i < 6; ++i) {
-				var b = System.Math.Pow(256, i);
-				int num0 = (int)(index / System.Math.Pow(256, i));
-				var tes0 = num0 & (byte)0xff;
-				
-				//byte b = nonce[nonce.Length - 1 - i] ^ yte)num1 & (byte)3);
-				var nonceI = nonce.Length - 1 - i;
-				nonce[nonceI] ^= (byte)tes0;
-				//nonce[nonce.Length - 1 - i] ^= (byte)(index / System.Math.Pow(256, i)) & 0xff;
-				//(index / Math.pow(256, i)) & 0xff;
-			}
-			
-			return nonce;
-		}
-        
+        private byte[] generateNonce(byte[] _base, int index)
+        {
+            if (index >= System.Math.Pow(2, 48))
+            {
+                Debug.WriteLine("Nonce index is too large  BAD_CRYPTO");
+                return null;
+            }
+            var nonce = new byte[12];
+            Array.Copy(_base, 0, nonce, 0, 12);
+
+
+            for (var i = 0; i < 6; ++i)
+            {
+                var b = System.Math.Pow(256, i);
+                int num0 = (int)(index / System.Math.Pow(256, i));
+                var tes0 = num0 & (byte)0xff;
+
+                //byte b = nonce[nonce.Length - 1 - i] ^ yte)num1 & (byte)3);
+                var nonceI = nonce.Length - 1 - i;
+                nonce[nonceI] ^= (byte)tes0;
+                //nonce[nonce.Length - 1 - i] ^= (byte)(index / System.Math.Pow(256, i)) & 0xff;
+                //(index / Math.pow(256, i)) & 0xff;
+            }
+
+            return nonce;
+        }
+
 #pragma warning restore 1591
     }
 }
