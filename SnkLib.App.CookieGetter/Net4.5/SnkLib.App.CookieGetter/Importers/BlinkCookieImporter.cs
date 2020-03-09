@@ -87,7 +87,9 @@ namespace SunokoLibrary.Application.Browsers
                     baseObj.Value = string.Empty;
                 else
                 {
-                    if (formatVersion >= 12)
+                	var isAead = cipher[0] == 118 && cipher[1] == 49 && cipher[2] == 48;//starts with v10
+                	if (isAead)
+                    //if (formatVersion >= 12)
                     {
                         var plain = decryptAeadProtectedData(cipher);
                         if (plain == null)
