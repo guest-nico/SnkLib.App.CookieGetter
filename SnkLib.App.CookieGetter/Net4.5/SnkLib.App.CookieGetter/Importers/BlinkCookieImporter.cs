@@ -133,8 +133,8 @@ namespace SunokoLibrary.Application.Browsers
             var nonce = new List<byte>(payload).GetRange(3, 96 / 8);
             var cipher = new List<byte>(payload).GetRange(3 + 96 / 8, payload.Length - (3 + 96 / 8));
             var oskey = getOsKey();
-            //Debug.WriteLine("nonce " + nonce + " cipher " + cipher + " " + oskey);
 
+            if (nonce == null || cipher == null || oskey == null) return null;
             var dec = decodeAead(cipher.ToArray(), nonce.ToArray(), oskey);
             return dec;
         }
@@ -142,10 +142,21 @@ namespace SunokoLibrary.Application.Browsers
         {
             try
             {
-                var _dataFolder = SourceInfo.CookiePath.Substring(0, SourceInfo.CookiePath.IndexOf("User Data")+9);
-                if (string.IsNullOrEmpty(_dataFolder))
-                    return null;
-                var path = Path.Combine(_dataFolder, "Local State");
+            	var parent = Directory.GetParent(SourceInfo.CookiePath).Parent.FullName;
+            	var path = getLocalStateDir(parent);
+            	if (path == null) {
+            		var dirs = Directory.GetDirectories(parent);
+            		foreach (var d in dirs) {
+            			path = getLocalStateDir(d);
+            			if (path != null) break;
+            		}
+            	}
+            	if (path == null) return null;
+            	
+                //var _dataFolder = SourceInfo.CookiePath.Substring(0, SourceInfo.CookiePath.IndexOf("User Data")+9);
+                //if (string.IsNullOrEmpty(_dataFolder))
+                //    return null;
+                //var path = Path.Combine(_dataFolder, "Local State");
                 using (var f = new StreamReader(path))
                 {
                     var t = f.ReadToEnd();
@@ -165,41 +176,56 @@ namespace SunokoLibrary.Application.Browsers
                 return null;
             }
         }
+        private string getLocalStateDir(string dir) {
+        	var fList = Directory.GetFiles(dir);
+        	foreach (var f in fList) {
+        		if (f.ToLower().Replace(" ", "").EndsWith("localstate"))
+        			return f;
+        	}
+        	return null;
+        }
         private string decodeAead(byte[] chunk, byte[] nonce, byte[] oskey)
         {
             var iv = generateNonce(nonce, 0);
+            if (iv == null) return null;
             var dec = DecryptWithKey(chunk, oskey, iv);
+            if (dec == null) return null;
             return Encoding.ASCII.GetString(dec);
 
         }
         private byte[] DecryptWithKey(byte[] encryptedMessage, byte[] key, byte[] nonce)
         {
-            int _macSize = 128;
-
-            if (encryptedMessage == null || encryptedMessage.Length == 0)
-            {
-                throw new ArgumentException("Encrypted Message Required!", "encryptedMessage");
-            }
-
-            using (var cipherStream = new MemoryStream(encryptedMessage))
-            using (var cipherReader = new BinaryReader(cipherStream))
-            {
-
-                var cipher = new GcmBlockCipher(new AesEngine());
-                var parameters = new AeadParameters(new KeyParameter(key), _macSize, nonce);
-                cipher.Init(false, parameters);
-
-                //Decrypt Cipher Text
-                var cipherText = cipherReader.ReadBytes(encryptedMessage.Length);
-                var plainText = new byte[cipher.GetOutputSize(cipherText.Length)];
-                var outSize = cipher.GetOutputSize(cipherText.Length);
-
-                var len = cipher.ProcessBytes(cipherText, 0, cipherText.Length, plainText, 0);
-                cipher.DoFinal(plainText, len);
-
-                return plainText;
-                //return null;
-            }
+        	try {
+	            int _macSize = 128;
+	
+	            if (encryptedMessage == null || encryptedMessage.Length == 0)
+	            {
+	                throw new ArgumentException("Encrypted Message Required!", "encryptedMessage");
+	            }
+	
+	            using (var cipherStream = new MemoryStream(encryptedMessage))
+	            using (var cipherReader = new BinaryReader(cipherStream))
+	            {
+	
+	                var cipher = new GcmBlockCipher(new AesEngine());
+	                var parameters = new AeadParameters(new KeyParameter(key), _macSize, nonce);
+	                cipher.Init(false, parameters);
+	
+	                //Decrypt Cipher Text
+	                var cipherText = cipherReader.ReadBytes(encryptedMessage.Length);
+	                var plainText = new byte[cipher.GetOutputSize(cipherText.Length)];
+	                var outSize = cipher.GetOutputSize(cipherText.Length);
+	
+	                var len = cipher.ProcessBytes(cipherText, 0, cipherText.Length, plainText, 0);
+	                cipher.DoFinal(plainText, len);
+	
+	                return plainText;
+	                //return null;
+	            }
+        	} catch (Exception e) {
+        		Debug.WriteLine(e.Message + e.Source + e.StackTrace + e.TargetSite);
+        		return null;
+        	}
         }
         private byte[] generateNonce(byte[] _base, int index)
         {
