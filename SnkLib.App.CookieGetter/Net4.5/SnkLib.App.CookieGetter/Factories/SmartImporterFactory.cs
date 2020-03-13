@@ -112,6 +112,8 @@ namespace SunokoLibrary.Application.Browsers
             return string.IsNullOrEmpty(appName) == false
                 ? new BlinkImporterFactory(appName, userDataPath, engineId: engineId) : null;
         }
+        public string GetStateFile(string cookiepath)
+        { return BlinkCookieImporter.getLocalStateFile(cookiepath); }
 #pragma warning restore 1591
     }
     /// <summary>

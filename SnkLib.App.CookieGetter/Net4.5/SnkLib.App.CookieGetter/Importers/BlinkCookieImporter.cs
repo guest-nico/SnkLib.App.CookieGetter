@@ -42,11 +42,21 @@ namespace SunokoLibrary.Application.Browsers
                     || int.TryParse((string)formatVersionRec[0][0], out formatVersion) == false)
                     return new CookieImportResult(null,CookieImportState.ConvertError);
 
+                //Local Stateファイル名を取得
+                //EngineIdをクラス名としてインスタンス作成
+                string localstate = null;
+                var ty = Type.GetType(this.SourceInfo.EngineId);
+                var obj = Activator.CreateInstance(ty);
+                //その中のGetStateFileメソッド呼び出し
+                var mt = ty.GetMethod("GetStateFile");
+                try { localstate = (string)mt.Invoke(obj, new object[] { this.SourceInfo.CookiePath }); }
+                catch (Exception) { localstate = null; }
+                
                 string query;
                 query = formatVersion < 7 ? SELECT_QUERY : SELECT_QUERY_V7;
                 query = string.Format("{0} {1} ORDER BY creation_utc DESC", query, MakeWhere(targetUrl));
                 var cookies = new CookieCollection();
-                foreach (var item in LookupCookies(SourceInfo.CookiePath, query, rec => DataToCookie(rec, formatVersion)))
+                foreach (var item in LookupCookies(SourceInfo.CookiePath, query, rec => DataToCookie(rec, formatVersion, localstate)))
                     cookies.Add(item);
                 return new CookieImportResult(cookies, CookieImportState.Success);
             }
@@ -56,7 +66,7 @@ namespace SunokoLibrary.Application.Browsers
                 return new CookieImportResult(null, ex.Result);
             }
         }
-        protected Cookie DataToCookie(object[] data, int formatVersion)
+        protected Cookie DataToCookie(object[] data, int formatVersion, string localstate)
         {
             if (formatVersion < 7
                 ? data.Take(4).Where(rec => rec is string == false).Any() || data[4] is long == false
@@ -91,7 +101,7 @@ namespace SunokoLibrary.Application.Browsers
                 	if (isAead)
                     //if (formatVersion >= 12)
                     {
-                        var plain = decryptAeadProtectedData(cipher);
+                        var plain = decryptAeadProtectedData(cipher, localstate);
                         if (plain == null)
                             throw new CookieImportException(
                                 "Cookieの暗号化データを復号化できませんでした。aead", CookieImportState.ConvertError);
@@ -128,35 +138,24 @@ namespace SunokoLibrary.Application.Browsers
             return query;
         }
 
-        private string decryptAeadProtectedData(byte[] payload)
+        private string decryptAeadProtectedData(byte[] payload, string localstate)
         {
             var nonce = new List<byte>(payload).GetRange(3, 96 / 8);
             var cipher = new List<byte>(payload).GetRange(3 + 96 / 8, payload.Length - (3 + 96 / 8));
-            var oskey = getOsKey();
+            var oskey = getOsKey(localstate);
 
             if (nonce == null || cipher == null || oskey == null) return null;
             var dec = decodeAead(cipher.ToArray(), nonce.ToArray(), oskey);
             return dec;
         }
-        private byte[] getOsKey()
+        private byte[] getOsKey(string localstate)
         {
             try
             {
-            	var parent = Directory.GetParent(SourceInfo.CookiePath).Parent.FullName;
-            	var path = getLocalStateDir(parent);
-            	if (path == null) {
-            		var dirs = Directory.GetDirectories(parent);
-            		foreach (var d in dirs) {
-            			path = getLocalStateDir(d);
-            			if (path != null) break;
-            		}
-            	}
-            	if (path == null) return null;
-            	
-                //var _dataFolder = SourceInfo.CookiePath.Substring(0, SourceInfo.CookiePath.IndexOf("User Data")+9);
-                //if (string.IsNullOrEmpty(_dataFolder))
-                //    return null;
-                //var path = Path.Combine(_dataFolder, "Local State");
+                var path = localstate;
+                if (localstate == null)
+                    path = getLocalStateFile(this.SourceInfo.CookiePath);
+                if (path == null) return null;
                 using (var f = new StreamReader(path))
                 {
                     var t = f.ReadToEnd();
@@ -176,13 +175,32 @@ namespace SunokoLibrary.Application.Browsers
                 return null;
             }
         }
-        private string getLocalStateDir(string dir) {
-        	var fList = Directory.GetFiles(dir);
-        	foreach (var f in fList) {
-        		if (f.ToLower().Replace(" ", "").EndsWith("localstate"))
-        			return f;
-        	}
-        	return null;
+        public static string getLocalStateFile(string cookiepath)
+        {
+            DirectoryInfo parent = Directory.GetParent(cookiepath);
+            string path = null;
+            try
+            {
+                int count = 3;
+                while (count > 0)
+                {
+                    var fList = from file in parent.EnumerateFiles()
+                                where file.Name.ToLower().Replace(" ", "").EndsWith("localstate")
+                                select new { file.FullName };
+                    if (fList.ToList().Count > 0)
+                    {
+                        path = fList.FirstOrDefault().FullName;
+                        break;
+                    }
+                    count--;
+                    parent = parent.Parent;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return path;
         }
         private string decodeAead(byte[] chunk, byte[] nonce, byte[] oskey)
         {

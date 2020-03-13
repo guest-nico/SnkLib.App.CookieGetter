@@ -56,6 +56,13 @@ namespace SunokoLibrary.Application.Browsers
         { return GetDefaultProfiles().Concat(GetProfiles()); }
         public override ICookieImporter GetCookieImporter(CookieSourceInfo sourceInfo)
         { return new BlinkCookieImporter(sourceInfo, 2); }
+        public string GetStateFile(string dummy)
+        {
+            string path = null;
+            if (_dataFolder != null)
+                path = Path.Combine(_dataFolder, _stateFileName);
+            return path;
+        }
 #pragma warning restore 1591
 
         /// <summary>
