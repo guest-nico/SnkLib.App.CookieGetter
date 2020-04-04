@@ -118,6 +118,9 @@
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\EdgeImporterFactory.cs">
       <Link>Core\Factories\EdgeImporterFactory.cs</Link>
     </Compile>
+    <Compile Include="..\SnkLib.App.CookieGetter\Factories\EdgeChromiumImporterFactory.cs">
+      <Link>Core\Factories\EdgeChromiumImporterFactory.cs</Link>
+    </Compile>
     <Compile Include="..\SnkLib.App.CookieGetter\Factories\FirefoxImporterFactory.cs">
       <Link>Core\Factories\FirefoxImporterFactory.cs</Link>
     </Compile>

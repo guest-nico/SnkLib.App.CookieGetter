@@ -68,6 +68,7 @@
     <Compile Include="CookieGetters.cs" />
     <Compile Include="CookieSourceSelector.cs" />
     <Compile Include="Factories\EdgeImporterFactory.cs" />
+    <Compile Include="Factories\EdgeChromiumImporterFactory.cs" />
     <Compile Include="Importers\IEFindCacheCookieImporter.cs" />
     <Compile Include="Importers\BlinkCookieImporter.cs" />
     <Compile Include="Importers\CookieImporterBase.cs" />
