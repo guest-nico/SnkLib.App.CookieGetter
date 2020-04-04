@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace SunokoLibrary.Application
 {
-    internal static class Utility
+    public static class Utility
     {
         static DateTime unix = new DateTime(1970, 1, 1, 9, 0, 0);
         public static DateTime UnixTimeToDateTime(ulong UnixTime)
@@ -29,7 +29,7 @@ namespace SunokoLibrary.Application
             return path;
         }
     }
-    internal static class Win32Api
+    public static class Win32Api
     {
         public const uint INTERNET_COOKIE_THIRD_PARTY = 0x00000010;
         public const uint INTERNET_COOKIE_HTTPONLY = 0x00002000;

@@ -77,7 +77,7 @@ namespace SunokoLibrary.Application.Browsers
             var hResult = Win32Api.GetCookiesFromProtectedModeIE(out lpszCookieData, url, key);
             return lpszCookieData;
         }
-        internal static string InternalGetCookiesWinApiOnProxy(Uri url, string key)
+        public static string InternalGetCookiesWinApiOnProxy(Uri url, string key)
         {
             var processId = Process.GetCurrentProcess().Id.ToString();
             var endpointUrl = new Uri(string.Format("net.pipe://localhost/SnkLib.App.CookieGetter.x86Proxy/{0}/Service/", processId));

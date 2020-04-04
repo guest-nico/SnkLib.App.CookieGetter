@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SnkLib.App.CookieGetter.Forms</id>
-        <version>1.4.0.0</version>
+        <version>1.4.1.0</version>
         <title>SnkLib.App.CookieGetter.Forms</title>
         <authors>namoshika</authors>
         <owners>namoshika</owners>
