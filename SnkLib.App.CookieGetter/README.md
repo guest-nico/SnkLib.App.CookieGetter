@@ -1,9 +1,13 @@
-GoogleChrome80の仕様変更に対応するため、SnkLib.App.CookieGetter様のプロジェクト内のコードを一部変更したものがこのリポジトリです。  
-ビルド・実行にはBouncyCastle.Cryptoが必要になります。
-  
-  
+### Chromium系ブラウザー80以降(Google Chrome, Microsoft Edge, Opera etc...)の仕様変更に対応するため、SnkLib.App.CookieGetter様のプロジェクト内のコードを一部変更したものがこのリポジトリです。  
 
-#SnkLib.App.CookieGetter
+ビルド・実行にはBouncyCastle.Cryptoが必要になります。  
+※BouncyCastle.NetCore は署名されていないのでエラーになります。 https://www.nuget.org/packages/BouncyCastle/1.8.1 を使用してください。  
+
+Visual Studioでは「パッケージの復元」で自動的にインストールされると思いますが、されない場合は以下の手順でインストールしてください。  
+- packageフォルダーに  BouncyCastle -Version 1.8.1 をインストールしてください。  
+
+
+# SnkLib.App.CookieGetter
 
 ブラウザのCookieを.NETアプリで使えるようにするライブラリです。  
 <http://com.nicovideo.jp/community/co235502> で配布されているCookieGetterSharpを元に、設計の改善を施しています。.NET4.0以上で動きます。
@@ -23,7 +27,7 @@ GoogleChrome80の仕様変更に対応するため、SnkLib.App.CookieGetter様�
 * [CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)  
   Copyright (c) 2014 halxxxx, うつろ
 
-##方針
+## 方針
 プロジェクトは以下の方針下にあります。  
 各プロジェクトはフレームワークのバージョン毎にフォルダを分けられています。
 
@@ -47,7 +51,7 @@ GoogleChrome80の仕様変更に対応するため、SnkLib.App.CookieGetter様�
 * Publish: 生成したnupkgの出力先
 * UnitTests: 動作確認。
 
-##使い方
+## 使い方
 使用したいプロジェクトへNuGetで以下のパッケージをインストールします。
 * [SnkLib.App.CookieGetter](https://www.nuget.org/packages/SnkLib.App.CookieGetter/)を追加する(必須)。
 * [SnkLib.App.CookieGetter.Forms](https://www.nuget.org/packages/SnkLib.App.CookieGetter.Forms/)を追加する  
