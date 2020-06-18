@@ -27,10 +27,10 @@ Visual Studioでは「パッケージの復元」で自動的にインストー�
 * [CookieGetterSharp](http://d.hatena.ne.jp/halxxxx/20091212/1260649353)  
   Copyright (c) 2014 halxxxx, うつろ
 
-Bouncy Castle
-<http://www.bouncycastle.org/>
-Copyright (c) 2000 - 2020 The Legion of the Bouncy Castle Inc.
-MIT license
+Bouncy Castle  
+<http://www.bouncycastle.org/>  
+Copyright (c) 2000 - 2020 The Legion of the Bouncy Castle Inc.  
+MIT license  
 <http://www.bouncycastle.org/licence.html>
 
 ## 方針
