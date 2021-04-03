@@ -12,6 +12,9 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public abstract class SmartImporterFactory : ImporterFactoryBase
     {
+    	public static List<string> geckoWithoutPathList = new List<string>();
+    	public static List<string> blinkWithoutPathList = new List<string>();
+    	
         /// <summary>
         /// パターンを入力してインスタンスを生成します。
         /// </summary>
@@ -79,16 +82,30 @@ namespace SunokoLibrary.Application.Browsers
                     continue;
 
                 //製品フォルダを列挙
+                if ((targetName == "User Data" && blinkWithoutPathList.IndexOf(itemLongPath) != -1) ||
+                    	(targetName == "profiles.ini" && geckoWithoutPathList.IndexOf(itemLongPath) != -1)) {
+                	continue;
+                }
                 IEnumerable<string> tmp;
-                try { tmp = Directory.EnumerateDirectories(itemLongPath); }
+            	try { tmp = Directory.EnumerateDirectories(itemLongPath); }
                 catch (UnauthorizedAccessException) { continue; }
                 catch (System.Security.SecurityException) { continue; }
                 catch (IOException) { continue; }
-
+				        
+				var c = 0;                
                 foreach (var item in tmp)
                 {
-                    searchingPaths.Push(item);
-                    searchingLevels.Push(itemLevel + 1);
+	                var _targetFilePath = Path.Combine(item, targetName);
+	                if (fileType == CookiePathType.File ? File.Exists(_targetFilePath) : Directory.Exists(_targetFilePath))
+	                {
+	                	c++;
+	                	searchingPaths.Push(item);
+                    	searchingLevels.Push(itemLevel + 1);
+	                }
+                }
+                if (c == 0) {
+                	if (targetName == "User Data") blinkWithoutPathList.Add(itemLongPath);
+                	else if (targetName == "profiles.ini") geckoWithoutPathList.Add(itemLongPath);
                 }
             }
         }
