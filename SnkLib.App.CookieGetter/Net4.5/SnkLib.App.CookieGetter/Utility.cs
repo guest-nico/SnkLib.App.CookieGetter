@@ -72,6 +72,13 @@ namespace SunokoLibrary.Application
                     + e.ToString());
                 return null;
             }
+            catch (EntryPointNotFoundException e)
+            {
+                Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                    + "CryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のエントリーポイントが存在しませんでした。\r\n"
+                    + e.ToString());
+                return null;
+            }
             finally
             {
                 if (input.pbData != null)
@@ -118,6 +125,13 @@ namespace SunokoLibrary.Application
                     + e.ToString());
                 return null;
             }
+            catch (EntryPointNotFoundException e)
+            {
+                Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                    + "DecryptProtectedData()でエラーが発生しました。Win32API呼び出しで対象のエントリーポイントが存在しませんでした。\r\n"
+                    + e.ToString());
+                return null;
+            }
             finally
             {
                 if (input.pbData != null)
@@ -136,7 +150,7 @@ namespace SunokoLibrary.Application
         /// <returns>引数targetUrlに対して使えるCookieヘッダー値</returns>
         public static int GetCookiesFromProtectedModeIE(out string cookiesText, Uri targetUrl, string valueKey = null, uint paramsFlag = INTERNET_COOKIE_HTTPONLY)
         {
-        	Debug.WriteLine("GetCookiesFromProtectedModeIE");
+            Debug.WriteLine("GetCookiesFromProtectedModeIE");
             var cookieSize = 4096;
             var lpszCookieData = new StringBuilder(cookieSize);
             var dwSizeP = new IntPtr(cookieSize);
@@ -155,6 +169,14 @@ namespace SunokoLibrary.Application
                     cookiesText = null;
                     Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
                         + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32API呼び出しで対象のdllが存在しませんでした。\r\n"
+                        + e.ToString());
+                    return int.MaxValue;
+                }
+                catch (EntryPointNotFoundException e)
+                {
+                    cookiesText = null;
+                    Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
+                        + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32API呼び出しで対象のエントリーポイントが存在しませんでした。\r\n"
                         + e.ToString());
                     return int.MaxValue;
                 }
@@ -186,8 +208,8 @@ namespace SunokoLibrary.Application
                         cookiesText = null;
                         Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
                                          + "GetCookiesFromProtectedModeIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。" + (uint)hResult + " " + i);
-                        if (i > 20) 
-                        	return hResult;
+                        if (i > 20)
+                            return hResult;
                         continue;
                 }
             }
@@ -227,6 +249,14 @@ namespace SunokoLibrary.Application
                         + e.ToString());
                     return int.MaxValue;
                 }
+                catch (EntryPointNotFoundException e)
+                {
+                    cookiesText = null;
+                    Trace.TraceError("SnkLib.App.CookieGetter.dll\r\n"
+                        + "GetCookiesFromIE()でエラーが発生しました。Win32API呼び出しで対象のエントリーポイントが存在しませんでした。\r\n"
+                        + e.ToString());
+                    return int.MaxValue;
+                }
                 //Errorが出ていた時
                 var hResult = Marshal.GetHRForLastWin32Error();
                 switch ((uint)hResult)
@@ -252,8 +282,8 @@ namespace SunokoLibrary.Application
                         cookiesText = null;
                         Trace.TraceError("SnkLib.App.CookieGetter.dll:\r\n"
                             + "GetCookiesFromIE()でエラーが発生しました。Win32APIの実行結果が未知の状態を示しています。");
-                        if (i > 20) 
-                        	return hResult;
+                        if (i > 20)
+                            return hResult;
                         continue;
                 }
             }
@@ -285,9 +315,9 @@ namespace SunokoLibrary.Application
         [DllImport("ieframe.dll", CharSet = CharSet.Unicode)]
         static extern int IEGetProtectedModeCookie(string lpszURL, string lpszCookieName, StringBuilder pszCookieData, ref int pcchCookieData, uint dwFlags);
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-        static extern bool CryptProtectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
+        static extern bool CryptProtectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
         [DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-        static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref  DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
+        static extern bool CryptUnprotectData(ref DATA_BLOB pDataIn, string ppszDataDescr, ref DATA_BLOB pOptionalEntropy, IntPtr pvReserved, IntPtr pPromptStruct, uint dwFlags, [In, Out]ref DATA_BLOB pDataOut);
         [DllImport("Kernel32.dll")]
         static extern IntPtr LocalFree(IntPtr hMem);
 
