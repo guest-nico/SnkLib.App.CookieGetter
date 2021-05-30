@@ -56,7 +56,8 @@ namespace SunokoLibrary.Application.Browsers
                 query = formatVersion < 7 ? SELECT_QUERY : SELECT_QUERY_V7;
                 query = string.Format("{0} {1} ORDER BY creation_utc DESC", query, MakeWhere(targetUrl));
                 var cookies = new CookieCollection();
-                foreach (var item in LookupCookies(SourceInfo.CookiePath, query, rec => DataToCookie(rec, formatVersion, localstate)))
+                var l = LookupCookies(SourceInfo.CookiePath, query, rec => DataToCookie(rec, formatVersion, localstate));
+                foreach (var item in l)
                     cookies.Add(item);
                 return new CookieImportResult(cookies, CookieImportState.Success);
             }

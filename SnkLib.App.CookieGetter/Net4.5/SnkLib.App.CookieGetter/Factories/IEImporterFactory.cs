@@ -47,7 +47,7 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cookieFolder = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
                 _ieImporter = new IECookieImporter(new CookieSourceInfo(
-                    "IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 0);
+                    "IE Normal", "Default", cookieFolder, ENGINE_ID_NORMAL_IE, false), 3);
             }
             return _ieImporter;
         }
@@ -61,7 +61,7 @@ namespace SunokoLibrary.Application.Browsers
                 var cookieFolder = System.IO.Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.Cookies), "low");
                 _iePMImporter = new IEPMCookieImporter(new CookieSourceInfo(
-                    "IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 0);
+                    "IE Protected", "Default", cookieFolder, ENGINE_ID_PROTECTED_IE, false), 3);
             }
             return _iePMImporter;
         }
@@ -75,7 +75,7 @@ namespace SunokoLibrary.Application.Browsers
                 var cookieFolder = Utility.ReplacePathSymbols(
                     @"%LOCALAPPDATA%\Packages\windows_ie_ac_001\AC\INetCookies");
                 _ieEPMImporter = new IEFindCacheCookieImporter(new CookieSourceInfo(
-                    "IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 0);
+                    "IE Enhanced Protected", "Default", cookieFolder, ENGINE_ID_ENHANCED_PROTECTED_IE, false), 3);
             }
             return _ieEPMImporter;
         }

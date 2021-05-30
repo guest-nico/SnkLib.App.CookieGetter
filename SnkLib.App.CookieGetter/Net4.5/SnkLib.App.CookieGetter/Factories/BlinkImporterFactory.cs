@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Text;
-#if !NET20
 using Newtonsoft.Json.Linq;
+
+#if !NET20
+
 #endif
 
 namespace SunokoLibrary.Application.Browsers
@@ -86,6 +89,7 @@ namespace SunokoLibrary.Application.Browsers
                 return Enumerable.Empty<ICookieImporter>();
 
             string stateTxt;
+            Debug.WriteLine("blink " + Path.Combine(_dataFolder, _stateFileName));
             try { stateTxt = File.ReadAllText(Path.Combine(_dataFolder, _stateFileName)); }
             catch (IOException) { return Enumerable.Empty<ICookieImporter>(); }
 

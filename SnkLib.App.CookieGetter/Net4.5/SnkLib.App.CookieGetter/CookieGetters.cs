@@ -90,7 +90,8 @@ namespace SunokoLibrary.Application
         {
             _importerFactories = new ICookieImporterFactory[] {
                 //_ieFactory, _egFactory, _ffFactory, _chFactory,
-                _ieFactory, _ffFactory, _chFactory,
+                //_ieFactory,
+                _ffFactory, _chFactory,
                 new EdgeChromiumImporterFactory(),
                 new OperaWebkitImporterFactory(),
                 new ChromiumImporterFactory(),
@@ -100,6 +101,7 @@ namespace SunokoLibrary.Application
                 new TungstenImporterFactory(),
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),
+                _ieFactory,
             };
             Default = new CookieGetters();
         }

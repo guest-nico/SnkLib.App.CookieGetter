@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SunokoLibrary.Application.Browsers
 {
@@ -14,7 +17,6 @@ namespace SunokoLibrary.Application.Browsers
     {
     	public static List<string> geckoWithoutPathList = new List<string>();
     	public static List<string> blinkWithoutPathList = new List<string>();
-    	
         /// <summary>
         /// パターンを入力してインスタンスを生成します。
         /// </summary>
@@ -68,7 +70,7 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var itemLevel = searchingLevels.Pop();
                 var itemLongPath = searchingPaths.Pop();
-                var itemShrtPath = itemLongPath.Substring(dirPath.Length);
+                //var itemShrtPath = itemLongPath.Substring(dirPath.Length);
                 var targetFilePath = Path.Combine(itemLongPath, targetName);
 
                 if (fileType == CookiePathType.File ? File.Exists(targetFilePath) : Directory.Exists(targetFilePath))
@@ -99,9 +101,10 @@ namespace SunokoLibrary.Application.Browsers
 	                if (fileType == CookiePathType.File ? File.Exists(_targetFilePath) : Directory.Exists(_targetFilePath))
 	                {
 	                	c++;
-	                	searchingPaths.Push(item);
-                    	searchingLevels.Push(itemLevel + 1);
 	                }
+                	
+                    searchingPaths.Push(item);
+                    searchingLevels.Push(itemLevel + 1);
                 }
                 if (c == 0) {
                 	if (targetName == "User Data") blinkWithoutPathList.Add(itemLongPath);

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using SunokoLibrary.Application.Browsers;
 
 namespace SunokoLibrary.Windows.ViewModels
 {
@@ -102,6 +103,8 @@ namespace SunokoLibrary.Windows.ViewModels
         {
             ICookieImporter currentImporter = null;
             CookieSourceInfo currentInfo = null;
+            SqlCookieImporter.tempNameList.Clear();
+            GeckoImporterFactory.fileDataList.Clear();
             try
             {
                 //設定復元用に選択中のブラウザを取得。
@@ -163,6 +166,9 @@ namespace SunokoLibrary.Windows.ViewModels
         {
             try
             {
+            	SqlCookieImporter.tempNameList.Clear();
+            	GeckoImporterFactory.fileDataList.Clear();
+            	
                 await _updateSem.WaitAsync();
                 IsUpdating = true;
                 await PrivateSetInfoAsync(info);

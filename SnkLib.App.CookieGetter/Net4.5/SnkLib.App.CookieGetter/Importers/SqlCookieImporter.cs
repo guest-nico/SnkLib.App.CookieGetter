@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,8 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public abstract class SqlCookieImporter : CookieImporterBase
     {
+    	public static List<KeyValuePair<string, string>> tempNameList = new List<KeyValuePair<string, string>>();
+    	
 #pragma warning disable 1591
         public SqlCookieImporter(CookieSourceInfo info, int primaryLevel) : base(info, CookiePathType.File, primaryLevel) { }
 #pragma warning restore 1591
@@ -44,18 +47,28 @@ namespace SunokoLibrary.Application.Browsers
             string temp = null;
             try
             {
-                temp = Path.GetTempFileName();
-                File.Copy(path, temp, true);
-
+            	var _temp = tempNameList.Find(x => x.Key == path);
+            	if (_temp.Equals(default(KeyValuePair<string, string>)) || !File.Exists(_temp.Value)) {
+            		temp = Path.GetTempFileName();
+                	File.Copy(path, temp, true);
+                	tempNameList.Add(new KeyValuePair<string, string>(path, temp));
+            	} else {
+            		Debug.WriteLine("temp list exist");
+            		temp = _temp.Value;
+            	}
+            		
+                
                 // SQLite3.7.x
+                /*
                 var pathshm = path + "-shm";
                 var pathwal = path + "-wal";
                 if (File.Exists(pathshm))
                 {
+                	Debug.WriteLine("shm exist " + path);
                     File.Copy(pathwal, temp + "-wal", true);
                     File.Copy(pathshm, temp + "-shm", true);
                 }
-
+				*/
                 var results = new List<object[]>();
                 SQLiteConnection sqlConnection = null;
                 try

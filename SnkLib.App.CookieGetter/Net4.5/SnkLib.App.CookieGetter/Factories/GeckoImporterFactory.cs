@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Text;
@@ -11,6 +12,8 @@ namespace SunokoLibrary.Application.Browsers
     /// </summary>
     public class GeckoImporterFactory : ImporterFactoryBase
     {
+    	public static List<KeyValuePair<string, List<string>>> fileDataList = new List<KeyValuePair<string, List<string>>>(); 
+    		
         /// <summary>
         /// 指定したブラウザ情報でインスタンスを生成します。
         /// </summary>
@@ -71,67 +74,91 @@ namespace SunokoLibrary.Application.Browsers
             /// <returns></returns>
             public static UserProfile[] GetProfiles(string moz_path, string iniFileName)
             {
-                var profileListPath = System.IO.Path.Combine(moz_path, iniFileName);
-                var results = new List<UserProfile>();
-                if (File.Exists(profileListPath) == false)
-                    return results.ToArray();
-
-                using (var sr = new StreamReader(profileListPath))
-                {
-                    //セクション毎ループ
-                    var line = null as string;
-                    var recheck = false;
-                    while (!sr.EndOfStream || recheck)
-                    {
-                        //行再処理フラグが立っていなければ行を進める
-                        if (recheck)
-                            recheck = false;
-                        else
-                            line = sr.ReadLine();
-
-                        if (line.StartsWith("[Profile"))
-                        {
-                            //設定値毎ループ
-                            var prof = new UserProfile();
-                            while (!sr.EndOfStream)
-                            {
-                                //lineBが"["から始まっている場合、
-                                //前のセクション終了して次のセクションが開始した事を示す。
-                                //新セクションが開始したら何もせずに外ループからやり直す。
-                                line = sr.ReadLine();
-                                if (line.StartsWith("["))
-                                {
-                                    recheck = true;
-                                    break;
-                                }
-                                var pair = ParseKeyValuePair(line);
-                                switch (pair.Key)
-                                {
-                                    case "Name":
-                                        prof.Name = pair.Value;
-                                        break;
-                                    case "IsRelative":
-                                        prof.IsRelative = pair.Value == "1";
-                                        break;
-                                    case "Path":
-                                        prof.Path = pair.Value.Replace('/', '\\');
-                                        if (prof.IsRelative)
-                                            prof.Path = System.IO.Path.Combine(moz_path, prof.Path);
-                                        break;
-                                    case "Default":
-                                        prof.IsDefault = pair.Value == "1";
-                                        break;
-                                }
-                            }
-                            if (string.IsNullOrEmpty(prof.Path) == false)
-                                if (prof.IsDefault)
-                                    results.Insert(0, prof);
-                                else
-                                    results.Add(prof);
-                        }
-                    }
-                }
-                return results.ToArray();
+            	try {
+	                var profileListPath = System.IO.Path.Combine(moz_path, iniFileName);
+	                var results = new List<UserProfile>();
+	                if (File.Exists(profileListPath) == false)
+	                    return results.ToArray();
+	
+					Debug.WriteLine("gecho wake " + profileListPath);
+					
+					var lines = new List<string>();
+					var _f = fileDataList.Find(x => x.Key == profileListPath);
+	            	if (true || _f.Equals(default(KeyValuePair<string, List<string>>))) {
+						using (var sr = new StreamReader(profileListPath))
+		                {
+							while(!sr.EndOfStream)
+		                		lines.Add(sr.ReadLine());
+		                }
+						fileDataList.Add(new KeyValuePair<string, List<string>>(profileListPath, lines));
+	                	Debug.WriteLine("gecho file list not exist " + profileListPath);
+					} else {
+						Debug.WriteLine("gecho file list exist " + profileListPath);
+	            		lines = _f.Value;
+					}
+					
+	                for (var i = 0; i < lines.Count; i += 0)
+	                {
+	                	string line = null; 
+	                	
+	                    //セクション毎ループ
+	                    //var line = null as string;
+	                    var recheck = false;
+	                    while (i < lines.Count || recheck)
+	                    {
+	                        //行再処理フラグが立っていなければ行を進める
+	                        if (recheck)
+	                            recheck = false;
+	                        else
+	                        	line = lines[i++];
+	
+	                        if (line.StartsWith("[Profile"))
+	                        {
+	                            //設定値毎ループ
+	                            var prof = new UserProfile();
+	                            while (i < lines.Count)
+	                            {
+	                                //lineBが"["から始まっている場合、
+	                                //前のセクション終了して次のセクションが開始した事を示す。
+	                                //新セクションが開始したら何もせずに外ループからやり直す。
+	                                line = lines[i++];//sr.ReadLine();
+	                                if (line.StartsWith("["))
+	                                {
+	                                    recheck = true;
+	                                    break;
+	                                }
+	                                var pair = ParseKeyValuePair(line);
+	                                switch (pair.Key)
+	                                {
+	                                    case "Name":
+	                                        prof.Name = pair.Value;
+	                                        break;
+	                                    case "IsRelative":
+	                                        prof.IsRelative = pair.Value == "1";
+	                                        break;
+	                                    case "Path":
+	                                        prof.Path = pair.Value.Replace('/', '\\');
+	                                        if (prof.IsRelative)
+	                                            prof.Path = System.IO.Path.Combine(moz_path, prof.Path);
+	                                        break;
+	                                    case "Default":
+	                                        prof.IsDefault = pair.Value == "1";
+	                                        break;
+	                                }
+	                            }
+	                            if (string.IsNullOrEmpty(prof.Path) == false)
+	                                if (prof.IsDefault)
+	                                    results.Insert(0, prof);
+	                                else
+	                                    results.Add(prof);
+	                        }
+	                    }
+	                }
+	                return results.ToArray();
+            	} catch (Exception e) {
+            		Debug.WriteLine(e.Message + e.Source + e.StackTrace + e.TargetSite);
+            		return null;
+            	}
             }
             static KeyValuePair<string, string> ParseKeyValuePair(string line)
             {

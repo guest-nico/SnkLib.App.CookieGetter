@@ -1,9 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Text;
-#if !NET20
 using System.Threading.Tasks;
+
+#if !NET20
+
 #endif
 
 namespace SunokoLibrary.Application.Browsers
@@ -25,6 +28,7 @@ namespace SunokoLibrary.Application.Browsers
             {
                 var cookies = new CookieCollection();
                 var res = CookieImportState.ConvertError;
+                Debug.WriteLine("qt " + SourceInfo.CookiePath);
                 using (var sr = new System.IO.StreamReader(SourceInfo.CookiePath))
                     while (!sr.EndOfStream)
                     {
