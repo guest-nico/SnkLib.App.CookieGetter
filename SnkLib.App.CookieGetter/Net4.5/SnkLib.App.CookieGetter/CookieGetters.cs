@@ -101,7 +101,7 @@ namespace SunokoLibrary.Application
                 new TungstenImporterFactory(),
                 new SmartBlinkBrowserManager(),
                 new SmartGeckoBrowserManager(),
-                _ieFactory,
+                //_ieFactory,
             };
             Default = new CookieGetters();
         }
