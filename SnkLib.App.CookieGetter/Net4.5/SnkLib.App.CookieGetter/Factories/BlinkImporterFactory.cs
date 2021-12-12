@@ -77,6 +77,7 @@ namespace SunokoLibrary.Application.Browsers
             string path = null;
             if (_dataFolder != null)
                 path = Path.Combine(_dataFolder, _defaultFolderName, _cookieFileName);
+            if (!File.Exists(path)) path = Path.Combine(_dataFolder, _defaultFolderName, "Network", _cookieFileName);
             var conf = new CookieSourceInfo(_name, _defaultFolderName, path, EngineIds[0], false);
             return new ICookieImporter[] { new BlinkCookieImporter(conf, _primaryLevel) };
         }
