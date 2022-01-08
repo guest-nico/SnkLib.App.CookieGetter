@@ -106,7 +106,9 @@ namespace SunokoLibrary.Application.Browsers
                     new
                     {
                         ProfName = (string)item.Value["name"],
-                        CookiePath = Path.Combine(_dataFolder, item.Name, _cookieFileName)
+                        CookiePath = File.Exists(Path.Combine(_dataFolder, item.Name, _cookieFileName)) ?
+                        	Path.Combine(_dataFolder, item.Name, _cookieFileName) :
+                        	Path.Combine(_dataFolder, item.Name, "Network", _cookieFileName)
                     })
                 .Where(item => File.Exists(item.CookiePath))
                 .Select(item => (ICookieImporter)new BlinkCookieImporter(new CookieSourceInfo(
