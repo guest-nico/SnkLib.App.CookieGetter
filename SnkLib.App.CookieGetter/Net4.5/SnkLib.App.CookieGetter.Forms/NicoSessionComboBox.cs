@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 
 namespace SunokoLibrary.Windows.Forms
 {
@@ -61,8 +63,9 @@ namespace SunokoLibrary.Windows.Forms
             {
                 try
                 {
-                    var url = new Uri("http://www.nicovideo.jp/my/channel");
+                    var url = new Uri("https://www.nicovideo.jp/my/channel");
                     var container = new CookieContainer();
+                    container.PerDomainCapacity = 200;
                     var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
                     var result = await cookieImporter.GetCookiesAsync(url);
                     if (result.AddTo(container) != CookieImportState.Success)
@@ -71,7 +74,8 @@ namespace SunokoLibrary.Windows.Forms
                     var res = await client.GetStringAsync(url);
                     if (string.IsNullOrEmpty(res))
                         return null;
-                    var namem = Regex.Match(res, "nickname = \"([^<>]+)\";", RegexOptions.Singleline);
+                    var data = WebUtility.HtmlDecode(Regex.Match(res, "data-environment=\"([^\"]*)\"", RegexOptions.Compiled).Groups[1].Value);
+                    var namem = Regex.Match(data, "nickname\":\"([^\"]*)\"", RegexOptions.Compiled);
                     if (namem.Success)
                         return namem.Groups[1].Value;
                     else
