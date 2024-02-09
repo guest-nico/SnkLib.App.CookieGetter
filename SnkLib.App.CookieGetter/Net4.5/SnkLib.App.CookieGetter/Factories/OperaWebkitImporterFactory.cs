@@ -11,7 +11,7 @@ namespace SunokoLibrary.Application.Browsers
     {
 #pragma warning disable 1591
         public OperaWebkitImporterFactory()
-            : base("Opera Webkit", "%APPDATA%\\Opera Software\\Opera Stable", defaultFolder: string.Empty) { }
+            : base("Opera Webkit", "%APPDATA%\\Opera Software\\Opera Stable", 2) { }
 #pragma warning restore 1591
     }
 }
