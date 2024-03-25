@@ -67,9 +67,20 @@ namespace SunokoLibrary.Windows.Forms
                     var container = new CookieContainer();
                     container.PerDomainCapacity = 200;
                     var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (SnkLib.App.CookieGetter.Forms)");
                     var result = await cookieImporter.GetCookiesAsync(url);
-                    if (result.AddTo(container) != CookieImportState.Success)
-                        return null;
+                    var sts = result.AddTo(container);
+                    if (sts != CookieImportState.Success)
+                    {
+                        if (sts == CookieImportState.AccessError)
+                        {
+                            return "**ブラウザを閉じてください**";
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
 
                     var res = await client.GetStringAsync(url);
                     if (string.IsNullOrEmpty(res))
