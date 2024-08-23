@@ -50,7 +50,17 @@ namespace SunokoLibrary.Application.Browsers
             	var _temp = tempNameList.Find(x => x.Key == path);
             	if (_temp.Equals(default(KeyValuePair<string, string>)) || !File.Exists(_temp.Value)) {
             		temp = Path.GetTempFileName();
-                	File.Copy(path, temp, true);
+            		try {
+                		File.Copy(path, temp, true);
+            		} catch (IOException ex) {
+            			using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            			using (var fs2 = new FileStream(temp, FileMode.Create, FileAccess.Write)) {
+            				var n = new FileInfo(path).Length;
+            				var b = new byte[n];
+            				fs.Read(b, 0, (int)n);
+            				fs2.Write(b, 0, b.Length);
+            			}
+					}
                 	tempNameList.Add(new KeyValuePair<string, string>(path, temp));
             	} else {
             		Debug.WriteLine("temp list exist");

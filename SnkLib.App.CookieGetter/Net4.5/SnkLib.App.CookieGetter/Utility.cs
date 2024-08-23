@@ -13,7 +13,13 @@ namespace SunokoLibrary.Application
     {
         static DateTime unix = new DateTime(1970, 1, 1, 9, 0, 0);
         public static DateTime UnixTimeToDateTime(ulong UnixTime)
-        { return unix.AddSeconds(UnixTime); }
+        {
+        	try {
+        		return unix.AddSeconds(UnixTime); 
+        	} catch (ArgumentOutOfRangeException e) {
+        		return DateTime.MaxValue;
+        	}
+        }
         public static ulong DateTimeToUnixTime(DateTime dateTime)
         { return (ulong)(dateTime - unix).TotalSeconds; }
         /// <summary>
