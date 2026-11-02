@@ -63,7 +63,7 @@ namespace SunokoLibrary.Windows.Forms
             {
                 try
                 {
-                    var url = new Uri("https://www.nicovideo.jp/my/channel");
+                    var url = new Uri("https://www.nicovideo.jp/my/");
                     var container = new CookieContainer();
                     container.PerDomainCapacity = 200;
                     var client = new HttpClient(new HttpClientHandler() { CookieContainer = container });
@@ -71,17 +71,7 @@ namespace SunokoLibrary.Windows.Forms
                     var result = await cookieImporter.GetCookiesAsync(url);
                     var sts = result.AddTo(container);
                     if (sts != CookieImportState.Success)
-                    {
-                        if (sts == CookieImportState.AccessError)
-                        {
-                            return "**ブラウザを閉じてください**";
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
-
+                        return null;
                     var res = await client.GetStringAsync(url);
                     if (string.IsNullOrEmpty(res))
                         return null;
